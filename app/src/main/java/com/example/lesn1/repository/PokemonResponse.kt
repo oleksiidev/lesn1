@@ -1,12 +1,16 @@
 package com.example.lesn1.repository
 
 data class PokemonResponse (
-    val count: Int,
     val results: List<Pokemons>
+)
+data class Pokemon(
+    val name: String,
 )
 data class Pokemons(
     val name: String,
-    val urls: List<String>
+    val id: Int,
+    val weight: Int,
+    val order: Int,
 )
 
 //https://pokeapi.co/api/v2/pokemon/

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.lesn1.repository.Pokemons
 import com.example.lesn1.ui.theme.Lesn1Theme
 
 class MainActivity : ComponentActivity() {
@@ -42,22 +44,52 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                   ShowPokList(viewModel = viewModel)
+                    ShowPokList(viewModel = viewModel, onClick = {name -> navigateToDetailsActivity(name)})
                 }
             }
         }
+        fun navigateToDetailsActivity(name: String) {
+            val detailsIntent = Intent(this, DetailsActivity::class.java)
+            detailsIntent.putExtra("CUSTOM_NAME", name)
+            startActivity(detailsIntent)
     }
 }
 @Composable
-fun ShowPokList(viewModel: MainViewModel){
-    val pokemon by viewModel.immutablePokData.observeAsState(emptyList())
+fun ShowPokList(viewModel: MainViewModel, onClick: (String) -> Unit) {
+    val uiState by viewModel.immutablePokemonData.observeAsState(UiState())
 
-    Log.d("MainActivity", "ALL Pokemons: ${pokemon.size}" )
-
-    if (pokemon.isNotEmpty()){
-        pokemon.forEach { pokemon ->
-            Log.d("MainActivity", "${pokemon.name}, ${pokemon.urls}" )}
+    when {
+        uiState.isLoading -> {
+            LoadingView()
         }
+        uiState.error != null -> {
+            ErrorView()
+        }
+        uiState.data != null -> {
+            uiState.data?.let { MyListView(pokemon = it) { name -> onClick.invoke(name) } }
+        }
+    }
+}
+
+
+    @Composable
+    fun ErrorView() {
+        Text(text = "ERROR", fontSize=70.sp, fontStyle = FontStyle.Italic, color = Color.Red)
+    }
+
+    @Composable
+    fun LoadingView() {
+        CircularProgressIndicator()
+    }
+
+    @Composable
+    fun MyListView(pokemon: List<Pokemons>, onClick: (String) -> Unit){
+        LazyColumn{
+            items(pokemon) {pokemon ->
+                MainView(name = pokemon.name, onClick = { name -> onClick.invoke(name) })
+            }
+        }
+
     }
 
 @Composable
