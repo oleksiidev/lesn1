@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lesn1.repository.PokemonRepository
 import com.example.lesn1.repository.Pokemon
-import com.example.lesn1.repository.PokemonDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception

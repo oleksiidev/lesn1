@@ -7,9 +7,12 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -20,6 +23,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lesn1.repository.PokemonDetails
 import com.example.lesn1.ui.theme.Lesn1Theme
@@ -74,14 +79,38 @@ fun DetailsLoadingView() {
 }
 
 @Composable
-fun DetailsView(pokemonDetails: PokemonDetails){
+fun DetailsView(pokemonDetails: PokemonDetails) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(text = "Name: "+pokemonDetails.name.uppercase(), fontSize= 30.sp, color= Color.Black)
-        Text(text = "Id: "+pokemonDetails.id.toString(), fontSize=30.sp, fontStyle = FontStyle.Normal, color = Color.Red)
-        Text(text = "Weight: "+pokemonDetails.weight.toString(), fontSize=30.sp, fontStyle = FontStyle.Normal, color = Color.Red)
-        Text(text = "Order: "+pokemonDetails.order.toString(), fontSize=30.sp, fontStyle = FontStyle.Normal, color = Color.Red)
+        DetailItem("Name", pokemonDetails.name.uppercase(), Color.Black)
+        DetailItem("Id", pokemonDetails.id.toString(), Color.Red)
+        DetailItem("Weight", pokemonDetails.weight.toString(), Color.Red)
+        DetailItem("Order", pokemonDetails.order.toString(), Color.Red)
     }
+}
 
+@Composable
+private fun DetailItem(label: String, value: String, color: Color) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "$label:",
+            fontSize = 18.sp,
+            fontStyle = FontStyle.Normal,
+            color = color,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = value,
+            fontSize = 18.sp,
+            fontStyle = FontStyle.Normal,
+            color = color
+        )
+    }
 }

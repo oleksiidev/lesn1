@@ -99,11 +99,12 @@ fun MainView(name: String, onClick: (String) -> Unit) {
     Column(
         modifier = Modifier.clickable { onClick.invoke(name) }
     ) {
-        Text(text = name.uppercase(), color= Color.Black, fontSize = 40.sp, textAlign = Center, fontWeight = FontWeight.Bold)
         Image(
             painter = painterResource(R.drawable.img),
-            contentDescription = "test"
+            contentDescription = "Pokemon"
         )
+        Text(text = name.uppercase(), color= Color.Blue, fontSize = 30.sp, textAlign = Center, fontWeight = FontWeight.SemiBold)
+
     }
 }
 
@@ -111,7 +112,7 @@ fun MainView(name: String, onClick: (String) -> Unit) {
 @Composable
 fun MainViewPreview(){
     Lesn1Theme {
-        MainView("a", {})
+        MainView("a") {}
     }
 
 }
