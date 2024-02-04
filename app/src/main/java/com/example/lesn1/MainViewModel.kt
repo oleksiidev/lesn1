@@ -5,37 +5,40 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.lesn1.repository.PokRepository
-import com.example.lesn1.repository.Pokemons
+import com.example.lesn1.repository.PokemonRepository
+import com.example.lesn1.repository.Pokemon
+import com.example.lesn1.repository.PokemonDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class MainViewModel : ViewModel() {
 
-    private val PokRepository = PokRepository()
+    private val pokemonRepository = PokemonRepository()
 
-    private val mutablePokData = MutableLiveData<List<Pokemons>>()
-    val immutablePokData: LiveData<List<Pokemons>> = mutablePokData
+    private val livePokemonData = MutableLiveData<UiState<List<Pokemon>>>()
+    val immutablePokemonData: LiveData<UiState<List<Pokemon>>> = livePokemonData
 
     fun getData() {
+        livePokemonData.postValue(UiState(isLoading = true))
         viewModelScope.launch(Dispatchers.IO) {
 
             try {
-                val request = PokRepository.getPokResponse()
-                Log.d("MainViewModel", "request return code: ${request.code()}")
+                val request = pokemonRepository.getPokemonResponse()
+                Log.d("MainViewModel", "request return code:  ${request.code()}")
+
                 if (request.isSuccessful) {
                     val pokemon = request.body()?.results
-                    mutablePokData.postValue(pokemon)
-                } else{
+                    livePokemonData.postValue(UiState(data = pokemon))
+                } else {
+                    livePokemonData.postValue(UiState(error = "${request.code()}"))
                     Log.e("MainViewModel", "Request failed, ${request.errorBody()}")
                 }
-            }
-                catch (e: Exception){
-                    Log.e("MainViewModel", "Nie udalo sie pobrac", e)
-                }
-            }
+            } catch (e: Exception) {
+                livePokemonData.postValue(UiState(error = "Exception $e"))
+                Log.e("MainViewModel", "Request failed, exception: ", e)
 
+            }
         }
-
     }
+}

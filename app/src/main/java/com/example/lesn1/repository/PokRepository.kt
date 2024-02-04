@@ -1,14 +1,12 @@
-package com.example.pokedex.repository
+package com.example.lesn1.repository
 
-import com.example.lesn1.repository.PokService
-import com.example.lesn1.repository.PokemonResponse
-import com.example.lesn1.repository.Pokemons
+
 import retrofit2.Response
 
-class PokRepository {
+class PokemonRepository {
     suspend fun getPokemonResponse(): Response<PokemonResponse> =
-        PokService.pokService.getPokemonResponse()
+        PokemonService.pokemonService.getPokemonResponse()
 
-    suspend fun getPokemons(name:String): Response<Pokemons> =
-        PokService.pokService.getPokemons(name)
+    suspend fun getPokemonDetails(name:String): Response<PokemonDetails> =
+        PokemonService.pokemonService.getPokemonDetails(name)
 }

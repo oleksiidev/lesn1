@@ -1,12 +1,12 @@
 package com.example.lesn1.repository
 
 data class PokemonResponse (
-    val results: List<Pokemons>
+    val results: List<Pokemon>
 )
 data class Pokemon(
     val name: String,
 )
-data class Pokemons(
+data class PokemonDetails(
     val name: String,
     val id: Int,
     val weight: Int,
